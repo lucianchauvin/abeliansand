@@ -4,7 +4,7 @@ use std::io::{BufWriter};
 
 const N: usize = 2usize.pow(11) + 1;
 const C: usize = 4;
-const S: usize = 2usize.pow(30);
+const S: usize = 2usize.pow(23);
 
 const COLORS: [[u8; 3]; 4] = [
     [  0,   0,   0],
@@ -13,7 +13,7 @@ const COLORS: [[u8; 3]; 4] = [
     [  0,   0, 255],
 ];
 
-fn img(grid: &Vec<Vec<usize>>) -> std::io::Result<()> {
+fn img(grid: &[[usize; N]; N]) -> std::io::Result<()> {
     let file = File::create("out.ppm")?;
     let mut writer = BufWriter::new(file);
     writer.write_all(format!("P6\n{} {}\n255\n", N, N).as_bytes())?;
@@ -32,9 +32,9 @@ fn img(grid: &Vec<Vec<usize>>) -> std::io::Result<()> {
 }
 
 fn main() -> std::io::Result<()> {
-    let mut grid = vec![vec![0; N]; N];
+    let mut grid = [[0; N]; N];
     let mut stack: Vec<(usize, usize)> = Vec::new();
-    let mut in_stack = vec![vec![false; N]; N];
+    let mut in_stack = [[false; N]; N];
 
     grid[N/2][N/2] = S;
     stack.push((N/2, N/2));
@@ -47,10 +47,10 @@ fn main() -> std::io::Result<()> {
             grid[x][y] %= C;
 
             let neighbors: [(isize, isize); 4] = [
-                ( 0,  1),
-                ( 0, -1),
                 ( 1,  0),
                 (-1,  0),
+                ( 0,  1),
+                ( 0, -1),
             ];
             
             for (dx, dy) in neighbors.iter() {
