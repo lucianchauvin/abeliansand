@@ -33,12 +33,15 @@ fn img(grid: &Vec<Vec<usize>>) -> std::io::Result<()> {
 
 fn main() -> std::io::Result<()> {
     let mut grid = vec![vec![0; N]; N];
-    let mut to_check: Vec<(usize, usize)> = Vec::new();
+    let mut stack: Vec<(usize, usize)> = Vec::new();
+    let mut in_stack = vec![vec![false; N]; N];
 
     grid[N/2][N/2] = S;
-    to_check.push((N/2, N/2));
+    stack.push((N/2, N/2));
+    in_stack[N/2][N/2] = true;
 
-    while let Some((x, y)) = to_check.pop() {
+    while let Some((x, y)) = stack.pop() {
+        in_stack[x][y] = false;
         if grid[x][y] >= C {
             let to_add = grid[x][y] / C;
             grid[x][y] %= C;
@@ -61,8 +64,9 @@ fn main() -> std::io::Result<()> {
                     }
                 }
                 
-                if grid[nx][ny] >= C && ny >= N/2 && ny <= nx {
-                    to_check.push((nx, ny));
+                if grid[nx][ny] >= C && ny >= N/2 && ny <= nx && !in_stack[nx][ny] {
+                    stack.push((nx, ny));
+                    in_stack[nx][ny] = true;
                 }
             }
         }
