@@ -1,7 +1,6 @@
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::{BufWriter};
-use std::collections::VecDeque;
 
 const N: usize = 2usize.pow(11) + 1;
 const C: usize = 4;
@@ -34,12 +33,12 @@ fn img(grid: &Vec<Vec<usize>>) -> std::io::Result<()> {
 
 fn main() -> std::io::Result<()> {
     let mut grid = vec![vec![0; N]; N];
-    let mut to_check: VecDeque<(usize, usize)> = VecDeque::new();
+    let mut to_check: Vec<(usize, usize)> = Vec::new();
 
     grid[N/2][N/2] = S;
-    to_check.push_back((N/2, N/2));
+    to_check.push((N/2, N/2));
 
-    while let Some((x, y)) = to_check.pop_front() {
+    while let Some((x, y)) = to_check.pop() {
         if grid[x][y] >= C {
             let to_add = grid[x][y] / C;
             grid[x][y] %= C;
@@ -63,7 +62,7 @@ fn main() -> std::io::Result<()> {
                 }
                 
                 if grid[nx][ny] >= C && ny >= N/2 && ny <= nx {
-                    to_check.push_back((nx, ny));
+                    to_check.push((nx, ny));
                 }
             }
         }
